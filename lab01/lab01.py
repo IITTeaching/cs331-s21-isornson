@@ -22,7 +22,12 @@ def captured_output():
 
 # implement this function
 def is_perfect(n):
-    pass
+    multiples = [i for i in range(n) if not i == 0 and n % i == 0]
+    
+    sum = 0
+    for i in range(len(multiples)):
+        sum += multiples[i]
+    return sum == n
 
 # (3 points)
 def test1():
@@ -40,7 +45,11 @@ def test1():
 
 # implement this function
 def multiples_of_3_and_5(n):
-    pass
+    sum = 0
+    for i in range(n):
+        if i % 5 == 0 or i % 3 == 0:
+            sum += i
+    return sum
 
 # (3 points)
 def test2():
@@ -53,7 +62,13 @@ def test2():
 # EXERCISE 3
 #################################################################################
 def integer_right_triangles(p):
-    pass
+    sum = 0
+    for a in range(1, p // 2):
+        for b in range(1, p // 3):
+            c = p - a - b
+            if((a**2 + b**2) == c**2):
+                sum += 1
+    return sum
 
 def test3():
     tc = unittest.TestCase()
@@ -67,33 +82,67 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    pass
+    if len(chars) == 1:
+        print(chars + '\n')
+        return
+
+    height = len(chars)*2 - 1
+    
+    lineup = [char for char in chars]
+    first_char = lineup[0]
+    lineup = lineup[::-1] + lineup
+    lineup.remove(first_char)
+    
+    width = len(lineup)*2 - 1
+
+    art = ''
+    halfway = False
+    end = 1
+    for i in range(height):
+        curr_line = ''
+        for j in range(0, end):
+            curr_line += lineup[j]
+        
+        for k in range(end-2, -1, -1):
+            curr_line += lineup[k]
+        
+        if end > height//2:
+            halfway = True
+        if halfway:
+            end -= 1
+        else:
+            end += 1
+        art += '.'.join(curr_line).center(width, '.')
+        art += '\n'
+    print(art)
 
 def test4():
+    tc = unittest.TestCase()
     with captured_output() as (out,err):
         gen_pattern('@')
-        self.assertEqual(out.getvalue().strip(), '@')
+        tc.assertEqual(out.getvalue().strip(), '@')
     with captured_output() as (out,err):
         gen_pattern('@%')
-        self.assertEqual(out.getvalue().strip(),
-        """
+        tc.assertEqual(out.getvalue().strip(),
+"""
 ..%..
-%.@.%)
+%.@.%
 ..%..
-""")
-        with captured_output() as (out,err):
-            gen_pattern('ABC')
-            self.assertEqual(out.getvalue().strip(), """
+""".strip())
+    with captured_output() as (out,err):
+        gen_pattern('ABC')
+        tc.assertEqual(out.getvalue().strip(),
+"""
 ....C....
 ..C.B.C..
 C.B.A.B.C
 ..C.B.C..
 ....C....
-""")
-        with captured_output() as (out,err):
-            gen_pattern('#####')
-            self.assertEqual(out.getvalue().strip(),
-                             """
+""".strip())
+    with captured_output() as (out,err):
+        gen_pattern('#####')
+        tc.assertEqual(out.getvalue().strip(),
+"""
 ........#........
 ......#.#.#......
 ....#.#.#.#.#....
@@ -103,10 +152,10 @@ C.B.A.B.C
 ....#.#.#.#.#....
 ......#.#.#......
 ........#........
-""")
-        with captured_output() as (out,err):
-            gen_pattern('abcdefghijklmnop')
-            self.assertEqual(out.getvalue().strip(),
+""".strip())
+    with captured_output() as (out,err):
+        gen_pattern('abcdefghijklmnop')
+        tc.assertEqual(out.getvalue().strip(),
 """
 ..............................p..............................
 ............................p.o.p............................
@@ -139,7 +188,7 @@ p.o.n.m.l.k.j.i.h.g.f.e.d.c.b.a.b.c.d.e.f.g.h.i.j.k.l.m.n.o.p
 ..........................p.o.n.o.p..........................
 ............................p.o.p............................
 ..............................p..............................
-"""
+""".strip()
 )
 
 #################################################################################
