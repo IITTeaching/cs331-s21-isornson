@@ -187,7 +187,7 @@ class SuffixArray():
         """
         Creates a suffix array for document (a string).
         """
-        compare = lambda x,y:  0 if self.document[x:] == self.document[y:] else (-1 if self.document[x:] < self.document[y:] else 1)
+        compare = lambda x,y: 0 if self.document[x:] == self.document[y:] else (-1 if self.document[x:] < self.document[y:] else 1)
         self.document = document 
         self.suffix_array = [i for i in range(len(document))]
         mysort(self.suffix_array, compare)
@@ -196,14 +196,14 @@ class SuffixArray():
         """
         Returns all the positions of searchstr in the documented indexed by the suffix array.
         """
-        compare = lambda x, y: 0 if self.document[x:x + len(y)] == y else (-1 if self.document[x:x + len(y)] < y else 1)
+        compare = lambda x, y: 0 if self.document[x:x + len(searchstr)] == searchstr else (-1 if self.document[x:x + len(searchstr)] < searchstr else 1)
         return [mybinsearch(self.suffix_array, searchstr, compare)]
 
     def contains(self, searchstr: str):
         """
         Returns true of searchstr is coontained in document.
         """
-        compare = lambda x, y: 0 if self.document[x:x + len(y)] == y else (-1 if self.document[x:x + len(y)] < y else 1)
+        compare = lambda x, y: 0 if self.document[x:x + len(searchstr)] == searchstr else (-1 if self.document[x:x + len(searchstr)] < searchstr else 1)
         return mybinsearch(self.suffix_array, searchstr, compare) != -1
 
 # 40 Points
