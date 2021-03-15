@@ -42,6 +42,7 @@ class LinkedList:
         """Implements `x = self[idx]`"""
         assert(isinstance(idx, int))
         ### BEGIN SOLUTION
+        
         ### END SOLUTION
 
     def __setitem__(self, idx, value):
