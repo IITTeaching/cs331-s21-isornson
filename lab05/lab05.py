@@ -43,11 +43,12 @@ class LinkedList:
         """Implements `x = self[idx]`"""
         assert(isinstance(idx, int))
         ### BEGIN SOLUTION
+        if idx >= self.length:
+            raise IndexError
+
         idx = self._normalize_idx(idx)
         n = self.head.next
         for i in range(0, idx):
-            if n.next.val == None:
-                raise IndexError
             n = n.next
         return n.val
         ### END SOLUTION
@@ -350,9 +351,7 @@ class LinkedList:
     def clear(self):
         """Removes all elements from this list."""
         ### BEGIN SOLUTION
-        self.head = LinkedList.Node(None) 
         self.head.prior = self.head.next = self.head 
-        self.cursor = self.head
         self.length = 0
         ### END SOLUTION
 
@@ -664,7 +663,7 @@ def test_bulk_operations():
     data3 = data + data2
     for i in range(len(data3)):
         tc.assertEqual(data3[i], lst3[i])
-
+    
     lst.clear()
     tc.assertEqual(0, len(lst))
     with tc.assertRaises(IndexError):
