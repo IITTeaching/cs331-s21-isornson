@@ -224,10 +224,9 @@ class Queue:
         if self.empty():
             self.tail = 0
         self.head += 1
-        if self.head == len(self.data):
+        if self.head >= len(self.data):
             self.head = 0
         if self.data[self.head] != None:
-            self.head -= 1
             raise RuntimeError
         self.data[self.head] = val
         ### END SOLUTION
@@ -239,7 +238,7 @@ class Queue:
         temp = self.data[self.tail]
         self.data[self.tail] = None
         self.tail += 1
-        if self.tail == len(self.data):
+        if self.tail >= len(self.data):
             self.tail = 0
         return temp
         ### END SOLUTION
@@ -249,11 +248,11 @@ class Queue:
         ### BEGIN SOLUTION
         j = 0
         new_data = [None] * len(self.data)
-        for i in self.data:
+        for i in self:
             if i != None:
                 new_data[j] = i
                 j += 1
-        new_data = [None] * (newsize-len(self.data)) + new_data
+        new_data = [None] * (newsize - len(self.data)) + new_data
         self.head = -1
         self.tail = len(self.data)
         self.data = new_data
@@ -262,7 +261,7 @@ class Queue:
     def empty(self):
         ### BEGIN SOLUTION
         for i in self.data:
-            if i is not None:
+            if i != None:
                 return False
         self.head = self.tail = -1
         return True
@@ -281,7 +280,10 @@ class Queue:
 
     def __iter__(self):
         ### BEGIN SOLUTION
-        for i in self.data:
+        for i in self.data[self.tail:]:
+            if i != None:
+                yield i
+        for i in self.data[0:self.tail]:
             if i != None:
                 yield i
         ### END SOLUTION
