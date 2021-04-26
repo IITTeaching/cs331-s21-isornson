@@ -53,13 +53,31 @@ class HBStree:
         KeyError, if key does not exist.
         """
         # BEGIN SOLUTION
+        cur = self.root_versions[-1]
+        while cur:
+            if cur.val == key:
+                return key
+            if cur.val < key:
+                cur = cur.right
+            else:
+                cur = cur.left
+        raise KeyError
         # END SOLUTION
 
-    def __contains__(self, el):
+    def __contains__(self, key):
         """
         Return True if el exists in the current version of the tree.
         """
         # BEGIN SOLUTION
+        cur = self.root_versions[-1]
+        while cur:
+            if cur.val == key:
+                return True
+            if cur.val < key:
+                cur = cur.right
+            else:
+                cur = cur.left
+        return False
         # END SOLUTION
 
     def insert(self,key):
@@ -69,11 +87,54 @@ class HBStree:
         from creating a new version.
         """
         # BEGIN SOLUTION
+        if self.__contains__(key):
+            return
+        else:
+            def recuradd(node):
+                if node == None:
+                    return self.INode(key, None, None)
+                else:
+                    if node.val < key:
+                        return self.INode(node.val, node.left, recuradd(node.right))
+                    elif node.val > key:
+                        return self.INode(node.val, recuradd(node.left), node.right)
+            if self.root_versions[-1] == None:
+                self.root_versions.append(self.INode(key, None, None))
+            else:
+                node = self.root_versions[-1]
+                self.root_versions.append(recuradd(node))
         # END SOLUTION
 
     def delete(self,key):
         """Delete key from the tree, creating a new version of the tree. If key does not exist in the current version of the tree, then do nothing and refrain from creating a new version."""
         # BEGIN SOLUTION
+        if not self.__contains__(key):
+            return
+        def recurdel(node, r = None):
+            if not r == None:
+                if node.val == r:
+                    return None
+                else:
+                    return self.INode(node.val, node.left, recurdel(node.right, r))
+            else:
+                if node.val == key:
+                    if node.left == None and node.right == None:
+                        return None
+                    elif node.left == None and node.right != None:
+                        return node.right
+                    elif node.left != None and node.right == None:
+                        return node.left
+                    else:
+                        cur = node.left
+                        while cur.right:
+                            cur = cur.right
+                        return self.INode(cur.val, cur.left, recurdel(node.right, cur))
+                elif node.val > key:
+                    return self.INode(node.val, recurdel(node.left), node.right)
+                elif node.val < key:
+                    return self.INode(node.val, node.left, recurdel(node.right))
+        node = self.root_versions[-1]
+        self.root_versions.append(recurdel(node))
         # END SOLUTION
 
     @staticmethod
@@ -142,9 +203,16 @@ class HBStree:
         we should go back. The default 0 accesses the current version of the
         BS-tree.
         """
+        # BEGIN SOLUTION
         if timetravel < 0 or timetravel >= len(self.root_versions):
             raise IndexError(f"valid versions for time travel are 0 to {len(self.root_versions) -1}, but was {timetravel}")
-        # BEGIN SOLUTION
+        def treeiter(node):
+            if node:
+                yield from treeiter(node.left)
+                yield node.val
+                yield from treeiter(node.right)
+        rootnode = self.root_versions[self.num_versions() - 1 - timetravel]
+        yield from treeiter(rootnode)
         # END SOLUTION
 
     @staticmethod
