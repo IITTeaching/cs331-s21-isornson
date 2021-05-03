@@ -15,6 +15,9 @@ class AVLTree:
 
         def rotate_left(self):
             ### BEGIN SOLUTION
+            n = self.right
+            self.val, n.val = n.val, self.val
+            self.right, n.right, self.left, n.left = n.right, n.left, n, self.left
             ### END SOLUTION
 
         @staticmethod
@@ -31,16 +34,63 @@ class AVLTree:
     @staticmethod
     def rebalance(t):
         ### BEGIN SOLUTION
+        def balance(n):
+            return AVLTree.Node.height(n.right) - AVLTree.Node.height(n.left)
+        b = balance(t)
+        if b < -1:
+            if balance(t.left) > 0:
+                t.left.rotate_left()
+            t.rotate_right()
+            AVLTree.rebalance(t.right)
+        elif b > 1:
+            if balance(t.right) < 0:
+                t.right.rotate_right()
+            t.rotate_left()
+            AVLTree.rebalance(t.left)
         ### END SOLUTION
 
     def add(self, val):
         assert(val not in self)
         ### BEGIN SOLUTION
+        def add_recursive(node):
+            if not node:
+                return AVLTree.Node(val)
+            elif val < node.val:
+                node.left = add_recursive(node.left)
+                AVLTree.rebalance(node)
+                return node
+            elif val > node.val:
+                node.right = add_recursive(node.right)
+                AVLTree.rebalance(node)
+                return node 
+        self.root = add_recursive(self.root)
+        self.size +=1
         ### END SOLUTION
 
     def __delitem__(self, val):
         assert(val in self)
         ### BEGIN SOLUTION
+        def del_recursive(n, val):
+            if not n:
+                return n
+            elif val < n.val:
+                n.left = del_recursive(n.left, val)
+            elif val > n.val:
+                n.right = del_recursive(n.right, val)
+            else:
+                if not n.left:
+                    return n.right
+                elif not n.right:
+                    return n.left
+                m = n.right
+                while m.left:
+                    m = m.left
+                n.val = m.val
+                n.right = del_recursive(n.right, m.val)
+            AVLTree.rebalance(n)
+            return n
+        self.root = del_recursive(self.root, val)
+        self.size -= 1
         ### END SOLUTION
 
     def __contains__(self, val):
