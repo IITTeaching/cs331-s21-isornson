@@ -1,6 +1,9 @@
 from unittest import TestCase
 import random
+<<<<<<< HEAD
 import statistics
+=======
+>>>>>>> b1d7c74819d3e20abfb566c52a374cd5afb26705
 
 def quicksort(lst,pivot_fn):
     qsort(lst,0,len(lst) - 1,pivot_fn)
