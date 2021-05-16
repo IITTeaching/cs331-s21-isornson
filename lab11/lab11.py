@@ -1,9 +1,6 @@
 from unittest import TestCase
 import random
-<<<<<<< HEAD
 import statistics
-=======
->>>>>>> b1d7c74819d3e20abfb566c52a374cd5afb26705
 
 def quicksort(lst,pivot_fn):
     qsort(lst,0,len(lst) - 1,pivot_fn)
@@ -17,7 +14,7 @@ def qsort(lst,low,high,pivot_fn):
                 while lst[low] < pf:
                     low +=1
                 while lst[high] > pf:
-                    high -=1 
+                    high -=1
             return high
         pivot = FindPiv(lst, low, high, pivot_fn(lst, low, high))
         qsort(lst, low, pivot-1, pivot_fn)
